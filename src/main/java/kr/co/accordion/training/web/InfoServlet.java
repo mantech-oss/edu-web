@@ -18,7 +18,7 @@ public class InfoServlet extends HttpServlet {
                 "\"domain\":\"" + RuntimeInfo.json(RuntimeInfo.ingressHost(request)) + "\"," +
                 "\"podName\":\"" + RuntimeInfo.json(RuntimeInfo.hostname()) + "\"," +
                 "\"podIp\":\"" + RuntimeInfo.json(RuntimeInfo.podIp()) + "\"," +
-                "\"volumePath\":\"" + RuntimeInfo.json(RuntimeInfo.env("VOLUME_PATH", "/mnt")) + "\"" +
+                "\"volumePath\":\"" + RuntimeInfo.json("/tmp/k8s-training") + "\"" +
                 "}";
 
         response.getWriter().write(json);

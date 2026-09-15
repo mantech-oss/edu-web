@@ -21,7 +21,7 @@ async function saveInfo() {
   const button = $('saveBtn');
   button.disabled = true;
   $('saveStatus').className = 'status idle';
-  $('saveStatus').textContent = '현재 정보를 /mnt에 저장하는 중...';
+  $('saveStatus').textContent = '현재 정보를 /tmp/k8s-training에 저장하는 중...';
 
   try {
     const response = await fetch('api/save', { method: 'POST' });

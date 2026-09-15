@@ -22,7 +22,7 @@ public class SaveServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
-        String volumePath = RuntimeInfo.env("VOLUME_PATH", "/mnt");
+        String volumePath = "/tmp/k8s-training";
         String fileName = RuntimeInfo.env("SAVE_FILE_NAME", "k8s-training-info.txt");
         Path directory = Paths.get(volumePath);
         Path target = directory.resolve(fileName).normalize();
