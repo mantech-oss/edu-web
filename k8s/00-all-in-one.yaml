@@ -32,12 +32,8 @@ spec:
             - name: http
               containerPort: 8080
           env:
-            - name: SERVICE_NAME
-              value: training-web
-            - name: SERVICE_PORT
-              value: "80"
             - name: VOLUME_PATH
-              value: /volume
+              value: /mnt
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -50,13 +46,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
           volumeMounts:
             - name: training-volume
-              mountPath: /volume
+              mountPath: /mnt
           readinessProbe:
             httpGet:
               path: /api/info
@@ -92,7 +84,7 @@ kind: Ingress
 metadata:
   name: training-web
 spec:
-  # ingressClassName: nginx   # 환경에 맞게 수정
+  # ingressClassName: nginx
   rules:
     - host: training.example.com
       http:

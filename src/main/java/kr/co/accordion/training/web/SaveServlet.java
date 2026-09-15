@@ -22,7 +22,7 @@ public class SaveServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
-        String volumePath = RuntimeInfo.env("VOLUME_PATH", "/volume");
+        String volumePath = RuntimeInfo.env("VOLUME_PATH", "/mnt");
         String fileName = RuntimeInfo.env("SAVE_FILE_NAME", "k8s-training-info.txt");
         Path directory = Paths.get(volumePath);
         Path target = directory.resolve(fileName).normalize();
@@ -32,18 +32,17 @@ public class SaveServlet extends HttpServlet {
             String content =
                     "Kubernetes Training Runtime Information\n" +
                     "=======================================\n" +
-                    "Saved At     : " + LocalDateTime.now().format(FORMATTER) + "\n" +
-                    "Ingress URL  : " + RuntimeInfo.ingressUrl(request) + "\n" +
-                    "Ingress Host : " + RuntimeInfo.ingressHost(request) + "\n" +
-                    "Service      : " + RuntimeInfo.env("SERVICE_NAME", "training-web") + "\n" +
-                    "Service Port : " + RuntimeInfo.env("SERVICE_PORT", "80") + "\n" +
-                    "Namespace    : " + RuntimeInfo.env("POD_NAMESPACE", "default") + "\n" +
-                    "Pod Name     : " + RuntimeInfo.env("POD_NAME", "unknown") + "\n" +
-                    "Pod IP       : " + RuntimeInfo.env("POD_IP", "unknown") + "\n" +
-                    "Node Name    : " + RuntimeInfo.env("NODE_NAME", "unknown") + "\n" +
-                    "Volume Path  : " + volumePath + "\n";
+                    "Saved At  : " + LocalDateTime.now().format(FORMATTER) + "\n" +
+                    "Domain    : " + RuntimeInfo.ingressHost(request) + "\n" +
+                    "Namespace : " + RuntimeInfo.env("POD_NAMESPACE", "-") + "\n" +
+                    "Pod Name  : " + RuntimeInfo.env("POD_NAME", "-") + "\n" +
+                    "Pod IP    : " + RuntimeInfo.env("POD_IP", "-") + "\n";
 
-            Files.write(target, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+            Files.write(target, content.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE);
+
             response.getWriter().write("{\"success\":true,\"message\":\"저장 완료\",\"file\":\"" + RuntimeInfo.json(target.toString()) + "\"}");
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

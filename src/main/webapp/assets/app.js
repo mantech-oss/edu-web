@@ -5,17 +5,15 @@ async function loadInfo() {
     const response = await fetch('api/info', { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const info = await response.json();
-    $('ingressHost').textContent = info.ingressHost;
-    $('ingressUrl').textContent = info.ingressUrl;
-    $('serviceName').textContent = info.serviceName;
-    $('servicePort').textContent = info.servicePort;
-    $('podName').textContent = info.podName;
-    $('podIp').textContent = info.podIp;
-    $('volumePath').textContent = info.volumePath;
+
+    $('domain').textContent = info.domain;
+    $('domainDetail').textContent = info.domain;
     $('namespace').textContent = info.namespace;
+    $('podName').textContent = info.podName;
     $('podNameDetail').textContent = info.podName;
+    $('podIp').textContent = info.podIp;
     $('podIpDetail').textContent = info.podIp;
-    $('nodeName').textContent = info.nodeName;
+    $('volumePath').textContent = info.volumePath;
     $('filePath').textContent = `${info.volumePath}/k8s-training-info.txt`;
   } catch (error) {
     $('saveStatus').className = 'save-status error';
@@ -27,11 +25,13 @@ async function saveInfo() {
   const button = $('saveBtn');
   button.disabled = true;
   $('saveStatus').className = 'save-status idle';
-  $('saveStatus').textContent = '현재 정보를 /volume에 저장하는 중...';
+  $('saveStatus').textContent = '현재 정보를 /mnt에 저장하는 중...';
+
   try {
     const response = await fetch('api/save', { method: 'POST' });
     const result = await response.json();
     if (!response.ok || !result.success) throw new Error(result.message || `HTTP ${response.status}`);
+
     $('saveStatus').className = 'save-status success';
     $('saveStatus').textContent = `✓ 저장 완료: ${result.file}`;
     await viewSavedFile();
@@ -46,6 +46,7 @@ async function saveInfo() {
 async function viewSavedFile() {
   $('savedPanel').classList.remove('hidden');
   $('savedContent').textContent = '저장 파일을 읽는 중...';
+
   try {
     const response = await fetch('api/saved', { cache: 'no-store' });
     const text = await response.text();
@@ -54,6 +55,7 @@ async function viewSavedFile() {
   } catch (error) {
     $('savedContent').textContent = error.message;
   }
+
   $('savedPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 

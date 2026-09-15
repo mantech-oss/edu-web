@@ -9,6 +9,6 @@ RUN mvn -q -DskipTests package
 
 FROM ${TOMCAT_IMAGE}
 COPY --from=builder /build/target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
-RUN mkdir -p /volume
+RUN mkdir -p /mnt
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

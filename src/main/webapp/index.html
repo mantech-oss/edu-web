@@ -3,94 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kubernetes Traffic Lab</title>
+  <title>Kubernetes Request Viewer</title>
   <link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
-<div class="background-grid"></div>
-<main class="shell">
-  <header class="hero panel">
-    <div>
-      <div class="eyebrow"><span class="pulse-dot"></span> LIVE KUBERNETES LAB</div>
-      <h1>요청이 Pod까지 도착하는 과정을<br><span>한눈에 확인하세요.</span></h1>
-      <p>Ingress → Service → Pod → Persistent Volume 흐름을 실제 요청 정보로 확인하는 교육용 애플리케이션입니다.</p>
-    </div>
-    <div class="hero-badge">
-      <div class="k8s-mark">K8s</div>
-      <div><strong>Runtime Trace</strong><small>Tomcat 8 · Servlet</small></div>
-    </div>
-  </header>
-
-  <section class="flow" aria-label="Kubernetes request flow">
-    <article class="node-card ingress-card">
-      <div class="node-top"><span class="icon">◎</span><span class="type">INGRESS</span></div>
-      <h2 id="ingressHost">불러오는 중...</h2>
-      <p id="ingressUrl">-</p>
-      <span class="status">External Entry</span>
-    </article>
-    <div class="arrow"><span></span><b>HTTP</b></div>
-    <article class="node-card service-card">
-      <div class="node-top"><span class="icon">◇</span><span class="type">SERVICE</span></div>
-      <h2 id="serviceName">-</h2>
-      <p>ClusterIP · Port <span id="servicePort">80</span></p>
-      <span class="status">Load Balancing</span>
-    </article>
-    <div class="arrow"><span></span><b>ROUTE</b></div>
-    <article class="node-card pod-card">
-      <div class="node-top"><span class="icon">⬡</span><span class="type">POD</span></div>
-      <h2 id="podName">-</h2>
-      <p>IP <span id="podIp">-</span></p>
-      <span class="status online"><i></i> Running</span>
-    </article>
-    <div class="arrow"><span></span><b>MOUNT</b></div>
-    <article class="node-card volume-card">
-      <div class="node-top"><span class="icon">▰</span><span class="type">VOLUME</span></div>
-      <h2 id="volumePath">/volume</h2>
-      <p>Persistent Storage</p>
-      <span class="status">PV / PVC Lab</span>
-    </article>
-  </section>
-
-  <section class="details-grid">
-    <article class="panel runtime-panel">
-      <div class="section-title">
-        <div><span class="section-kicker">REQUEST DETAILS</span><h3>현재 요청이 도착한 위치</h3></div>
-        <button id="refreshBtn" class="ghost-btn" type="button">↻ 새로고침</button>
+  <main class="page-shell">
+    <header class="top-card">
+      <div class="top-copy">
+        <span class="eyebrow">KUBERNETES HANDS-ON LAB</span>
+        <h1>현재 요청이 도착한 Pod 정보를 확인하세요.</h1>
+        <p>Ingress 접속 도메인과 Namespace, Pod Name, Pod IP를 한눈에 확인하고 같은 정보를 <code>/mnt</code>에 저장할 수 있습니다.</p>
       </div>
-      <div class="info-list">
-        <div><span>Namespace</span><strong id="namespace">-</strong></div>
-        <div><span>Pod Name</span><strong id="podNameDetail">-</strong></div>
-        <div><span>Pod IP</span><strong id="podIpDetail">-</strong></div>
-        <div><span>Node Name</span><strong id="nodeName">-</strong></div>
+      <div class="top-meta">
+        <span class="badge">Tomcat 8</span>
+        <strong>Runtime Viewer</strong>
+        <small>Ingress · Pod · PV/PVC</small>
       </div>
-      <div class="tip"><b>실습 포인트</b> Replica를 늘리고 새로고침하면 Service가 어떤 Pod로 요청을 전달했는지 비교할 수 있습니다.</div>
-    </article>
+    </header>
 
-    <article class="panel save-panel">
-      <div class="section-title">
-        <div><span class="section-kicker">PERSISTENT VOLUME</span><h3>현재 정보를 파일로 저장</h3></div>
-        <span class="disk-icon">▣</span>
+    <section class="section-head">
+      <div>
+        <h2>Runtime Summary</h2>
+        <p>현재 요청을 처리한 Pod의 핵심 정보입니다.</p>
       </div>
-      <p class="save-desc">현재 접속 정보를 PVC가 마운트된 <code>/volume</code> 경로에 텍스트 파일로 저장합니다.</p>
-      <div class="file-path"><span>FILE</span><code id="filePath">/volume/k8s-training-info.txt</code></div>
-      <div class="button-row">
-        <button id="saveBtn" class="primary-btn" type="button"><span>↓</span> /volume에 저장</button>
-        <button id="viewBtn" class="secondary-btn" type="button">저장 파일 확인</button>
+      <button id="refreshBtn" class="btn btn-light" type="button">새로고침</button>
+    </section>
+
+    <section class="runtime-grid">
+      <article class="info-card accent-card">
+        <span class="label">Domain</span>
+        <strong id="domain">-</strong>
+        <p>Ingress를 통해 접속한 도메인</p>
+      </article>
+
+      <article class="info-card">
+        <span class="label">Namespace</span>
+        <strong id="namespace">-</strong>
+        <p>Pod가 실행 중인 네임스페이스</p>
+      </article>
+
+      <article class="info-card wide-card">
+        <span class="label">Pod Name</span>
+        <strong id="podName" class="mono">-</strong>
+        <p>현재 요청을 실제로 처리한 Pod</p>
+      </article>
+
+      <article class="info-card">
+        <span class="label">Pod IP</span>
+        <strong id="podIp" class="mono">-</strong>
+        <p>현재 Pod에 할당된 IP 주소</p>
+      </article>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="panel guide-panel">
+        <span class="eyebrow">LAB GUIDE</span>
+        <h3>실습 포인트</h3>
+        <div class="guide-list">
+          <div><b>01</b><span>Ingress 주소로 접속한 뒤 Domain 값을 확인합니다.</span></div>
+          <div><b>02</b><span>Replica를 늘리고 새로고침하며 Pod Name / Pod IP 변화를 확인합니다.</span></div>
+          <div><b>03</b><span>저장 후 Pod를 재생성해도 파일이 유지되는지 확인합니다.</span></div>
+        </div>
+      </article>
+
+      <article class="panel save-panel">
+        <span class="eyebrow">PERSISTENT VOLUME</span>
+        <h3>현재 정보 저장</h3>
+        <p>현재 화면의 정보를 PVC가 마운트된 경로에 텍스트 파일로 저장합니다.</p>
+        <div class="path-box">
+          <span>저장 경로</span>
+          <code id="filePath">/mnt/k8s-training-info.txt</code>
+          <span id="volumePath" class="hidden-value">/mnt</span>
+        </div>
+        <div class="actions">
+          <button id="saveBtn" class="btn btn-primary" type="button">/mnt에 저장</button>
+          <button id="viewBtn" class="btn btn-light" type="button">저장 파일 확인</button>
+        </div>
+        <div id="saveStatus" class="status idle">저장 버튼을 눌러 PV/PVC 동작을 확인해 보세요.</div>
+      </article>
+    </section>
+
+    <section id="savedPanel" class="panel saved-panel hidden">
+      <div class="saved-head">
+        <div>
+          <span class="eyebrow">SAVED FILE</span>
+          <h3>/mnt 저장 내용</h3>
+        </div>
+        <button id="closeSavedBtn" class="btn btn-light" type="button">닫기</button>
       </div>
-      <div id="saveStatus" class="save-status idle">저장 버튼을 눌러 PV/PVC 동작을 확인해 보세요.</div>
-    </article>
-  </section>
-
-  <section id="savedPanel" class="panel saved-panel hidden">
-    <div class="section-title">
-      <div><span class="section-kicker">SAVED FILE</span><h3>/volume 저장 내용</h3></div>
-      <button id="closeSavedBtn" class="ghost-btn" type="button">닫기</button>
-    </div>
-    <pre id="savedContent">-</pre>
-  </section>
-
-  <footer><span>Kubernetes Hands-on Training</span><span>Ingress · Service · Pod · PV/PVC</span></footer>
-</main>
-<script src="assets/app.js"></script>
+      <pre id="savedContent">-</pre>
+    </section>
+  </main>
+  <script src="assets/app.js"></script>
 </body>
 </html>

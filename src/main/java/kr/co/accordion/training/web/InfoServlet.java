@@ -15,15 +15,11 @@ public class InfoServlet extends HttpServlet {
         response.setHeader("Cache-Control", "no-store");
 
         String json = "{" +
-                "\"ingressUrl\":\"" + RuntimeInfo.json(RuntimeInfo.ingressUrl(request)) + "\"," +
-                "\"ingressHost\":\"" + RuntimeInfo.json(RuntimeInfo.ingressHost(request)) + "\"," +
-                "\"serviceName\":\"" + RuntimeInfo.json(RuntimeInfo.env("SERVICE_NAME", "training-web")) + "\"," +
-                "\"servicePort\":\"" + RuntimeInfo.json(RuntimeInfo.env("SERVICE_PORT", "80")) + "\"," +
-                "\"podName\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAME", "unknown")) + "\"," +
-                "\"podIp\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_IP", "unknown")) + "\"," +
-                "\"namespace\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAMESPACE", "default")) + "\"," +
-                "\"nodeName\":\"" + RuntimeInfo.json(RuntimeInfo.env("NODE_NAME", "unknown")) + "\"," +
-                "\"volumePath\":\"" + RuntimeInfo.json(RuntimeInfo.env("VOLUME_PATH", "/volume")) + "\"" +
+                "\"domain\":\"" + RuntimeInfo.json(RuntimeInfo.ingressHost(request)) + "\"," +
+                "\"podName\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAME", "-")) + "\"," +
+                "\"podIp\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_IP", "-")) + "\"," +
+                "\"namespace\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAMESPACE", "-")) + "\"," +
+                "\"volumePath\":\"" + RuntimeInfo.json(RuntimeInfo.env("VOLUME_PATH", "/mnt")) + "\"" +
                 "}";
 
         response.getWriter().write(json);
