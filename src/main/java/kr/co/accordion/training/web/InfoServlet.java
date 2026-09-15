@@ -16,9 +16,8 @@ public class InfoServlet extends HttpServlet {
 
         String json = "{" +
                 "\"domain\":\"" + RuntimeInfo.json(RuntimeInfo.ingressHost(request)) + "\"," +
-                "\"podName\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAME", "-")) + "\"," +
-                "\"podIp\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_IP", "-")) + "\"," +
-                "\"namespace\":\"" + RuntimeInfo.json(RuntimeInfo.env("POD_NAMESPACE", "-")) + "\"," +
+                "\"podName\":\"" + RuntimeInfo.json(RuntimeInfo.hostname()) + "\"," +
+                "\"podIp\":\"" + RuntimeInfo.json(RuntimeInfo.podIp()) + "\"," +
                 "\"volumePath\":\"" + RuntimeInfo.json(RuntimeInfo.env("VOLUME_PATH", "/mnt")) + "\"" +
                 "}";
 

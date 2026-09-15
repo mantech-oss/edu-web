@@ -32,11 +32,10 @@ public class SaveServlet extends HttpServlet {
             String content =
                     "Kubernetes Training Runtime Information\n" +
                     "=======================================\n" +
-                    "Saved At  : " + LocalDateTime.now().format(FORMATTER) + "\n" +
-                    "Domain    : " + RuntimeInfo.ingressHost(request) + "\n" +
-                    "Namespace : " + RuntimeInfo.env("POD_NAMESPACE", "-") + "\n" +
-                    "Pod Name  : " + RuntimeInfo.env("POD_NAME", "-") + "\n" +
-                    "Pod IP    : " + RuntimeInfo.env("POD_IP", "-") + "\n";
+                    "Saved At : " + LocalDateTime.now().format(FORMATTER) + "\n" +
+                    "Domain   : " + RuntimeInfo.ingressHost(request) + "\n" +
+                    "Pod Name : " + RuntimeInfo.hostname() + "\n" +
+                    "Pod IP   : " + RuntimeInfo.podIp() + "\n";
 
             Files.write(target, content.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE,

@@ -12,7 +12,7 @@
       <div class="top-copy">
         <span class="eyebrow">KUBERNETES HANDS-ON LAB</span>
         <h1>현재 요청이 도착한 Pod 정보를 확인하세요.</h1>
-        <p>Ingress 접속 도메인과 Namespace, Pod Name, Pod IP를 한눈에 확인하고 같은 정보를 <code>/mnt</code>에 저장할 수 있습니다.</p>
+        <p>Ingress 접속 도메인과 현재 요청을 처리한 Pod 이름/IP를 확인하고 같은 정보를 <code>/mnt</code>에 저장할 수 있습니다.</p>
       </div>
       <div class="top-meta">
         <span class="badge">Tomcat 8</span>
@@ -29,7 +29,7 @@
       <button id="refreshBtn" class="btn btn-light" type="button">새로고침</button>
     </section>
 
-    <section class="runtime-grid">
+    <section class="runtime-grid simple-grid">
       <article class="info-card accent-card">
         <span class="label">Domain</span>
         <strong id="domain">-</strong>
@@ -37,21 +37,15 @@
       </article>
 
       <article class="info-card">
-        <span class="label">Namespace</span>
-        <strong id="namespace">-</strong>
-        <p>Pod가 실행 중인 네임스페이스</p>
-      </article>
-
-      <article class="info-card wide-card">
         <span class="label">Pod Name</span>
         <strong id="podName" class="mono">-</strong>
-        <p>현재 요청을 실제로 처리한 Pod</p>
+        <p><code>hostname</code> 명령 결과</p>
       </article>
 
       <article class="info-card">
         <span class="label">Pod IP</span>
         <strong id="podIp" class="mono">-</strong>
-        <p>현재 Pod에 할당된 IP 주소</p>
+        <p><code>hostname -I</code> 명령 결과</p>
       </article>
     </section>
 
@@ -61,7 +55,7 @@
         <h3>실습 포인트</h3>
         <div class="guide-list">
           <div><b>01</b><span>Ingress 주소로 접속한 뒤 Domain 값을 확인합니다.</span></div>
-          <div><b>02</b><span>Replica를 늘리고 새로고침하며 Pod Name / Pod IP 변화를 확인합니다.</span></div>
+          <div><b>02</b><span>Replica를 늘리고 새로고침하며 어떤 Pod가 응답하는지 확인합니다.</span></div>
           <div><b>03</b><span>저장 후 Pod를 재생성해도 파일이 유지되는지 확인합니다.</span></div>
         </div>
       </article>
